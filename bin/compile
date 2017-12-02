@@ -42,8 +42,7 @@ cd fontforge
 
 echo "-----> Compiling fontforge"
 ./bootstrap 2>&1 | indent
-./configure --help 2>&1 | indent
-./configure --prefix=${FONTFORGE_PREFIX} --without-x --without-cairo --without-giflib --without-libjpeg --without-libtiff --without-libpng --without-libspiro --without-libreadline --disable-python-extension 2>&1 | indent
+./configure --prefix=${FONTFORGE_PREFIX} --without-x --without-cairo --without-giflib --without-libjpeg --without-libtiff --without-libpng --without-libspiro --without-libreadline --disable-python-extension LDFLAGS="-static" 2>&1 | indent
 make
 make install
 

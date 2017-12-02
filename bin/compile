@@ -18,19 +18,19 @@ indent() {
 
 cd $BUILD_DIR
 
-# if [ -d ${CACHE_DIR}/.heroku/fontforge ]; then
-#   echo "FontForge is already compiled" | indent
+if [ -d ${CACHE_DIR}/.heroku/fontforge ]; then
+  echo "FontForge is already compiled" | indent
 
-#   echo "-----> Copying compiled fontforge from cache"
-#   mkdir -p ${BUILD_DIR}/.heroku/fontforge
-#   cp -R ${CACHE_DIR}/.heroku/fontforge/* ${BUILD_DIR}/.heroku/fontforge/
+  echo "-----> Copying compiled fontforge from cache"
+  mkdir -p ${BUILD_DIR}/.heroku/fontforge
+  cp -R ${CACHE_DIR}/.heroku/fontforge/* ${BUILD_DIR}/.heroku/fontforge/
 
-#   echo "-----> Installing profile script"
-#   mkdir -p "${BUILD_DIR}/.profile.d"
-#   cp ${ROOT_DIR}/profile/* ${BUILD_DIR}/.profile.d/
+  echo "-----> Installing profile script"
+  mkdir -p "${BUILD_DIR}/.profile.d"
+  cp ${ROOT_DIR}/profile/* ${BUILD_DIR}/.profile.d/
 
-#   exit 0
-# fi
+  exit 0
+fi
 
 mkdir -p $FONTFORGE_DIR
 

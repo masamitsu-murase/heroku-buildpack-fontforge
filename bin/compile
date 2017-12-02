@@ -25,6 +25,8 @@ if [ -d ${CACHE_DIR}/.heroku/fontforge ]; then
   mkdir -p ${BUILD_DIR}/.heroku/fontforge
   cp -R ${CACHE_DIR}/.heroku/fontforge/* ${BUILD_DIR}/.heroku/fontforge/
 
+  ${FONTFORGE_PREFIX}/bin/fontforge -version -nosplash 2>&1 | indent
+
   echo "-----> Installing profile script"
   mkdir -p "${BUILD_DIR}/.profile.d"
   cp ${ROOT_DIR}/profile/* ${BUILD_DIR}/.profile.d/
@@ -46,7 +48,7 @@ echo "-----> Compiling fontforge"
 make
 make install
 
-${FONTFORGE_PREFIX}/bin/fontforge -version -nosplash -quiet | indent
+${FONTFORGE_PREFIX}/bin/fontforge -version -nosplash 2>&1 | indent
 
 cd $BUILD_DIR
 

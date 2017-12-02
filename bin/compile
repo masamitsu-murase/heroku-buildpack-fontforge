@@ -61,6 +61,10 @@ mkdir -p ${CACHE_DIR}/.heroku/
 cp -R ${FONTFORGE_DIR} ${CACHE_DIR}/.heroku/
 cp -v -H /lib/x86_64-linux-gnu/libutil.so.1 ${CACHE_DIR}/.heroku/fontforge/usr/local/lib
 cp -v -H /usr/lib/x86_64-linux-gnu/libpython2.7.so.1.0 ${CACHE_DIR}/.heroku/fontforge/usr/local/lib
+cp -v -H /lib/x86_64-linux-gnu/libutil.so.1 ${BUILD_DIR}/.heroku/fontforge/usr/local/lib
+cp -v -H /usr/lib/x86_64-linux-gnu/libpython2.7.so.1.0 ${BUILD_DIR}/.heroku/fontforge/usr/local/lib
+
+ldd ${FONTFORGE_PREFIX}/bin/fontforge
 
 echo "-----> Cleaning up source"
 rm -fr fontforge

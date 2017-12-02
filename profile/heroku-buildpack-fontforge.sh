@@ -1,3 +1,3 @@
 #!/usr/bin/env sh
-PATH=$PATH:$HOME/.heroku/fontforge/usr/local/bin
-LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/.heroku/fontforge/usr/local/lib
+export PATH=$PATH:$HOME/.heroku/fontforge/usr/local/bin
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/.heroku/fontforge/usr/local/lib

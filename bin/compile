@@ -1,0 +1,69 @@
+#!/usr/bin/env sh
+# % bin/compile <build-dir> <cache-dir> <env-dir>
+
+set -e
+
+BIN_DIR=$(cd $(dirname $0); pwd)
+ROOT_DIR=$(dirname $BIN_DIR)
+BUILD_DIR=$1
+CACHE_DIR=$2
+
+FONTFORGE_DIR=${BUILD_DIR}/.heroku/fontforge
+FONTFORGE_PREFIX=${FONTFORGE_DIR}/usr/local
+FONTFORGE_ARCHIVE=fontforge.tar.gz
+
+indent() {
+  sed -u 's/^/       /'
+}
+
+cd $BUILD_DIR
+
+if [ -d ${CACHE_DIR}/.heroku/fontforge ]; then
+  echo "FontForge is already compiled" | indent
+
+  echo "-----> Copying compiled fontforge from cache"
+  mkdir -p ${BUILD_DIR}/.heroku/fontforge
+  cp -R ${CACHE_DIR}/.heroku/fontforge/* ${BUILD_DIR}/.heroku/fontforge/
+
+  echo "-----> Installing profile script"
+  mkdir -p "${BUILD_DIR}/.profile.d"
+  cp ${ROOT_DIR}/profile/* ${BUILD_DIR}/.profile.d/
+
+  exit 0
+fi
+
+mkdir -p $FONTFORGE_DIR
+
+echo "-----> Extractiong fontforge"
+tar zxf ${ROOT_DIR}/fontforge.tar.gz
+mv fontforge-20170731 fontforge
+
+cd fontforge
+
+echo "-----> Compiling fontforge"
+./bootstrap 2>&1 | indent
+./configure --prefix=${FONTFORGE_PREFIX} --without-x --without-cairo --without-giflib --without-libjpeg --without-libtiff --without-libpng --without-libspiro --without-libreadline --disable-python-extension 2>&1 | indent
+make
+make install
+
+${FONTFORGE_PREFIX}/bin/fontforge -version -nosplash -quiet | indent
+
+cd $BUILD_DIR
+
+# https://devcenter.heroku.com/articles/buildpack-api#caching
+# > Heroku users can use the heroku-repo plugin to clear the build cache
+# > created by the buildpack they use for their app
+echo "-----> Creating cache"
+rm -fr ${CACHE_DIR}/.heroku/fontforge
+mkdir -p ${CACHE_DIR}/.heroku/
+
+cp -R ${FONTFORGE_DIR} ${CACHE_DIR}/.heroku/
+
+echo "-----> Cleaning up source"
+rm -fr fontforge
+
+echo "-----> Installing profile script"
+mkdir -p "${BUILD_DIR}/.profile.d"
+cp ${ROOT_DIR}/profile/* ${BUILD_DIR}/.profile.d/
+
+exit 0

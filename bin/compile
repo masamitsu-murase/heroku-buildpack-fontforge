@@ -47,6 +47,7 @@ make
 make install
 
 ${FONTFORGE_PREFIX}/bin/fontforge -version -nosplash 2>&1 | indent
+ldd ${FONTFORGE_PREFIX}/bin/fontforge
 
 cd $BUILD_DIR
 

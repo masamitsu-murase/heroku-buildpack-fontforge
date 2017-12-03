@@ -3,6 +3,8 @@
 
 set -e
 
+CACHE_VERSION=cache_ver_1
+
 BIN_DIR=$(cd $(dirname $0); pwd)
 ROOT_DIR=$(dirname $BIN_DIR)
 BUILD_DIR=$1
@@ -18,7 +20,7 @@ indent() {
 
 cd $BUILD_DIR
 
-if [ -d ${CACHE_DIR}/.heroku/fontforge ]; then
+if [ -f ${CACHE_DIR}/.heroku/fontforge/${CACHE_VERSION} ]; then
   echo "FontForge is already compiled" | indent
 
   echo "-----> Copying compiled fontforge from cache"
@@ -61,6 +63,7 @@ rm -fr ${CACHE_DIR}/.heroku/fontforge
 mkdir -p ${CACHE_DIR}/.heroku/
 
 cp -R ${FONTFORGE_DIR} ${CACHE_DIR}/.heroku/
+touch ${CACHE_DIR}/.heroku/fontforge/${CACHE_VERSION}
 
 echo "-----> Cleaning up source"
 rm -fr fontforge

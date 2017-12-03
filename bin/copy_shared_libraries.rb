@@ -10,7 +10,7 @@ DEST_DIR = ARGV[1]
 
 output = `ldd #{ARGV[0]}`
 output.each_line.map do |line|
-    line = line.chomp
+    line = line.strip
     if TARGET_SO_LIST.any?{ |i| line.start_with?(i) }
         name, path_addr = line.split("=>").map(&:strip)
         path = path_addr.split(" ")[0]

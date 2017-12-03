@@ -42,14 +42,16 @@ cd fontforge
 
 echo "-----> Compiling fontforge"
 ./bootstrap 2>&1 | indent
-./configure --prefix=${FONTFORGE_PREFIX} --without-x --without-cairo --without-giflib --without-libjpeg --without-libtiff --without-libpng --without-libspiro --without-libreadline --disable-python-extension LDFLAGS="-static" 2>&1 | indent
+./configure --prefix=${FONTFORGE_PREFIX} --without-x --without-cairo --without-giflib --without-libjpeg --without-libtiff --without-libpng --without-libspiro --without-libreadline --disable-python-extension 2>&1 | indent
 make
 make install
 
 ${FONTFORGE_PREFIX}/bin/fontforge -version -nosplash 2>&1 | indent
-ldd ${FONTFORGE_PREFIX}/bin/fontforge
 
 cd $BUILD_DIR
+
+echo "-----> Copying necessary shared library"
+${BIN_DIR}/copy_shared_libraries.rb ${FONTFORGE_PREFIX}/bin/fontforge ${BUILD_DIR}/.heroku/fontforge/usr/local/lib
 
 # https://devcenter.heroku.com/articles/buildpack-api#caching
 # > Heroku users can use the heroku-repo plugin to clear the build cache
@@ -59,12 +61,6 @@ rm -fr ${CACHE_DIR}/.heroku/fontforge
 mkdir -p ${CACHE_DIR}/.heroku/
 
 cp -R ${FONTFORGE_DIR} ${CACHE_DIR}/.heroku/
-cp -v -H /lib/x86_64-linux-gnu/libutil.so.1 ${CACHE_DIR}/.heroku/fontforge/usr/local/lib
-cp -v -H /usr/lib/x86_64-linux-gnu/libpython2.7.so.1.0 ${CACHE_DIR}/.heroku/fontforge/usr/local/lib
-cp -v -H /lib/x86_64-linux-gnu/libutil.so.1 ${BUILD_DIR}/.heroku/fontforge/usr/local/lib
-cp -v -H /usr/lib/x86_64-linux-gnu/libpython2.7.so.1.0 ${BUILD_DIR}/.heroku/fontforge/usr/local/lib
-
-ldd ${FONTFORGE_PREFIX}/bin/fontforge
 
 echo "-----> Cleaning up source"
 rm -fr fontforge
